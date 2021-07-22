@@ -1,0 +1,15 @@
+.email-input{
+    width: 300px;
+}
+.login-form--title{
+    text-align: center;
+}
+.login-form--container{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+.login-form--input{
+    margin-top: 15px;
+}

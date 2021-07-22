@@ -1,0 +1,15 @@
+.email-input{
+    width: 300px;
+}
+.register-form--title{
+    text-align: center;
+}
+.register-form--container{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+.register-form--input{
+    margin-top: 15px;
+}

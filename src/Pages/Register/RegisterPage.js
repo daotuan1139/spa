@@ -1,79 +1,73 @@
-import React from "react";
-import { Formik } from "formik";
-import { Button, Form } from "react-bootstrap";
-import axios from 'axios'
-import './MyInput.css'
+import React from 'react';
+import { Button, Form } from 'react-bootstrap';
+import { Formik } from 'formik';
+import './RegisterInput.css'
 
 const initialValues = {
     email: '',
     password: '',
+    confirmPassword: '',
     university: 'default'
 };
+
 const validateValues = values => {
     const errors = {};
     if (!values.email) {
-        errors.email = 'Required';
+        errors.email = "Required";
     } else if (
         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
     ) {
         errors.email = 'Invalid email address';
-    }
-    if (values.password.length < 8) {
-        errors.password = 'Password too short'
+    } else if (values.password.length < 8) {
+        errors.password = 'At least 8 characters';
+    } else if (values.confirmPassword !== values.password) {
+        errors.confirmPassword = 'Confirm Password must match password'
     }
     return errors;
 };
 
-const LoginPage = ({currentUser, setCurrentUser,title }) => {
-  
-    const onSubmit = (values, { setSubmitting }) => {
-        console.log('values = ', values);
-    
-        axios.get('https://60dff0ba6b689e001788c858.mockapi.io/token', {
-          email: values.email,
-          password: values.password,
-        }).then((response) => {
-          setCurrentUser({
-            token: response.data.token,
-            userId: response.data.userId,
-          })
-          axios.defaults.headers.common["Authorization"] = response.data.token;
-        })
-        console.log(currentUser);
 
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400)
-      }
+const onSubmit = (values, { setSubmitting }) => {
+    console.log('values: ', values)
+    setTimeout(() => {
+        alert(JSON.stringify(values, null, 2));
+        setSubmitting(false);
+    }, 400)
 
+}
 
+const RegisterPage = () => {
+    const style = {
+        padding: 2.2 + '%',
+        border: '0.5px solid rbga(180,180,180,0.6)',
+        borderRadius: '5px',
+        width: '100%',
+    }
     return (
-        <div className='login-form'>
+        <div className="register-form">
             <Formik
                 initialValues={initialValues}
                 validate={validateValues}
                 onSubmit={onSubmit}
             >
                 {({
-                    values,
-                    errors,
-                    touched,
+                    handleSubmit,
                     handleChange,
                     handleBlur,
-                    handleSubmit,
-                    isSubmitting,
-                    /* and other goodies */
+                    values,
+                    touched,
+                    isValid,
+                    errors,
+
                 }) => (
                     <div>
-                        <h3 className="login-form--title">Login Form</h3>
-                        { title && <center><h5>{ title }</h5></center> }
+                        <h3 className="register-form--title">Register Form</h3>
                         <Form
                             noValidate
                             onSubmit={handleSubmit}
                             style={{ display: "flex", justifyContent: 'center' }}
                         >
-                            <div className="login-form--container">
+                            <div className="register-form--container">
                                 <Form.Group controlId="validationFormik01">
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
@@ -81,14 +75,11 @@ const LoginPage = ({currentUser, setCurrentUser,title }) => {
                                         name="email"
                                         value={values.email}
                                         onChange={handleChange}
-                                        onBlur={handleBlur}
+                                        isValid={touched.email && !errors.email}
                                         isInvalid={!!errors.email}
                                         className="email-input"
                                     />
-
-                                    <Form.Control.Feedback type="invalid">
-                                        {errors.email}
-                                    </Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="validationFormik02">
                                     <Form.Label>Password</Form.Label>
@@ -97,23 +88,23 @@ const LoginPage = ({currentUser, setCurrentUser,title }) => {
                                         name="password"
                                         value={values.password}
                                         onChange={handleChange}
-                                        isInvalid={touched.password && errors.password}
+                                        isValid={touched.password && !errors.password}
+                                        isInvalid={errors.password}
                                         className="email-input"
                                     />
-                                    <Form.Control.Feedback type='invalid'>
-                                        {errors.password}
-                                    </Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Check
-                                        required
-                                        name="terms"
-                                        label="Agree to terms and conditions"
+                                <Form.Group controlId="validationFormik02">
+                                    <Form.Label>Confirm Password</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        name="confirmPassword"
                                         onChange={handleChange}
-                                        isInvalid={!!errors.terms}
-                                        feedback={errors.terms}
-                                        id="validationFormik0"
+                                        isValid={touched.confirmPassword && !errors.confirmPassword}
+                                        isInvalid={errors.confirmPassword}
+                                        className="email-input"
                                     />
+                                    <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group controlId="validationFormik03">
                                     <Form.Label>Email</Form.Label>
@@ -127,20 +118,21 @@ const LoginPage = ({currentUser, setCurrentUser,title }) => {
                                         className="mb3"
                                     >
                                         <option value="default">None</option>
-                                        <option value="1">FPT</option>
-                                        <option value="2">NEU</option>
-                                        <option value="3">HaUI</option>
+                                        <option value="FPT">FPT</option>
+                                        <option value="NEU">NEU</option>
+                                        <option value="HaUI">HaUI</option>
                                     </Form.Control>
                                 </Form.Group>
 
-                                <Button className="login-form--input" type="submit">Submit form</Button>
+                                <Button className="login-form--input" type="submit">Register</Button>
                             </div>
                         </Form>
                     </div>
                 )}
             </Formik>
         </div>
-    );
-};
+    )
+}
 
-export default LoginPage;
+
+export default RegisterPage;
