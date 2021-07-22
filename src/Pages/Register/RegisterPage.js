@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { Formik } from 'formik';
-import './RegisterInput.css'
+import '../../Components/Input/RegisterInput.css'
 
 const initialValues = {
     email: '',

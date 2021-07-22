@@ -1,8 +1,8 @@
 import React from "react";
 import { Formik } from "formik";
 import { Button, Form } from "react-bootstrap";
-import axios from 'axios'
-import './MyInput.css'
+import axios from 'axios';
+import '../../Components/Input/LoginInput.css'
 
 const initialValues = {
     email: '',
@@ -28,6 +28,7 @@ const LoginPage = ({currentUser, setCurrentUser,title }) => {
   
     const onSubmit = (values, { setSubmitting }) => {
         console.log('values = ', values);
+        sessionStorage.setItem(values.email, values.password);
     
         axios.get('https://60dff0ba6b689e001788c858.mockapi.io/token', {
           email: values.email,
@@ -38,6 +39,7 @@ const LoginPage = ({currentUser, setCurrentUser,title }) => {
             userId: response.data.userId,
           })
           axios.defaults.headers.common["Authorization"] = response.data.token;
+          sessionStorage.setItem('token', JSON.stringify(response.data));
         })
         console.log(currentUser);
 
@@ -127,9 +129,9 @@ const LoginPage = ({currentUser, setCurrentUser,title }) => {
                                         className="mb3"
                                     >
                                         <option value="default">None</option>
-                                        <option value="1">FPT</option>
-                                        <option value="2">NEU</option>
-                                        <option value="3">HaUI</option>
+                                        <option value="FPT">FPT</option>
+                                        <option value="NEU">NEU</option>
+                                        <option value="HaUI">HaUI</option>
                                     </Form.Control>
                                 </Form.Group>
 
